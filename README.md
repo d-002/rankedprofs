@@ -26,19 +26,22 @@ Qualité de la personne
 
 ## Files organization:
 
-files/folder for each teacher
+files/teachers/folder for each teacher
+./votes folder:
 -> one file per account with gradings for this teacher, integers per line
+./images folder:
+-> a pfp and a banner image
 
 files/accounts
 -> one file per account, contains encrypted password, temporary hash with expiration date
 
 files/teachers.txt: all the teachers names
 
-files/images, folder with teachers pfp (can be zoomed in in the app of course :D), and backup one
-
 ## Features
 
 rank
+
+can show teachers pfp in fullscreen of course :)
 
 adjective depending on the results per category
 

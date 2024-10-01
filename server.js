@@ -26,4 +26,52 @@ app.get("/", (req, res) => {
 
 app.use(helmet());
 
+const teachers = fs.readdirSync(__dirname+"/files/teachers");
+
+function addVotes(acc, file) {
+    let data = String(fs.readFileSync(file)).split("\n");
+
+    for (let i = 0, I = data.length; i < I; i++) {
+        let [key, value] = data[i].split(":");
+        key = key.trim();
+        value = Number(value);
+
+        if (acc[key] == null) acc[key] = value;
+        else acc[key] += value;
+    }
+}
+
+function getTeacherData(teacher) {
+    if (!teachers.includes(teacher)) return null;
+
+    let parent = __dirname+"/files/teachers/"+teacher+"/votes/";
+    const list = fs.readdirSync(parent);
+    if (list.length == 0) return null;
+
+    let acc = {}; // accumulator, receives votes
+    list.forEach(file => addVotes(acc, parent+file));
+
+    let keys = Object.keys(acc);
+    for (let i = 0, count = keys.length; i < count; i++) acc[keys[i]] /= count;
+
+    return acc;
+}
+
+function getAll() {
+    let acc = {};
+    teachers.forEach(teacher => acc[teacher] = getTeacherData(teacher));
+
+    return acc;
+}
+
+io.on("connection", socket => {
+    socket.on("requireAll", () => {
+        socket.emit("receiveAll", getAll());
+    });
+
+    socket.on("requireMyVote", teacher => {
+        socket.emit("receiveMyVote", [teacher, getTeacherData(teacher)]);
+    });
+});
+
 server.listen(port, () => console.log("Listening on port "+port));
