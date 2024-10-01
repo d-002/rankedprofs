@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
         <title>Ranked profs</title>
@@ -13,5 +13,25 @@
     </head>
 
     <body>
+        <div id="list">
+        </div>
+
+        <div id="details">
+        </div>
+
+        <div id="login-popup">
+            <h1>Ranked profs</h1>
+            <h2 id="loginText">Chargement...</h2>
+            <form>
+                <span class="small" for="username">Nom d'utilisateur</label>
+                <input type="text" id="username" />
+                <label for="password" class="small">Mot de passe</label>
+                <input type="password" id="password" />
+
+                <a id="loginSubmit" onclick="loginSubmit()">Chargement...</a>
+
+                <a id="loginToggle" onclick="loginToggle()">Chargement...</a>
+            </form>
+        </div>
     </body>
 </html>
