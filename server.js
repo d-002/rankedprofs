@@ -22,16 +22,29 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname+"/index.html");
 });
 
+// image files redirection
+app.get("/images*", (req, res) => {
+    const split = req.url.split("/");
+    if (split.length != 4) {
+        res.send("haha no");
+        return;
+    }
+
+    const teacher = split[split.length-2];
+    const image = split[split.length-1];
+
+    res.sendFile(__dirname+"/files/teachers/"+teacher+"/"+image);
+});
+
 app.use(helmet());
 
-// list of correct vote keys
-const template = [
+const voteKeys = [
     "goodTeacher"
 ];
 
 const teachers = fs.readdirSync(__dirname+"/files/teachers");
 
-let getVoteFolder = teacher => __dirname+"/files/teachers/"+teacher+"/votes/";
+const getVoteFolder = teacher => __dirname+"/files/teachers/"+teacher+"/votes/";
 
 function accVotes(acc, file) {
     let data;
@@ -42,7 +55,7 @@ function accVotes(acc, file) {
         return 1;
     }
 
-    let keys = Object.keys(data);
+    const keys = Object.keys(data);
     for (let i = 0, I = keys.length; i < I; i++) {
         const key = keys[i];
         const value = data[key];
@@ -59,12 +72,14 @@ const allowedToSee = (folder, username) => fs.readdirSync(folder).includes(usern
 function getTeacherData(teacher, username) {
     if (!teachers.includes(teacher)) return null;
 
-    let parent = getVoteFolder(teacher);
-    if (!allowedToSee(parent, username)) return null;
+    const info = JSON.parse(fs.readFileSync(__dirname+"/files/teachers/"+teacher+"/info.txt"));
+
+    const parent = getVoteFolder(teacher);
+    if (!allowedToSee(parent, username)) return [info, null];
 
     const list = fs.readdirSync(parent);
-    let I = list.length;
-    if (!I) return null;
+    const I = list.length;
+    if (!I) return [info, null];
 
     let acc = {}; // accumulator, receives votes
     let count = 0;
@@ -72,16 +87,16 @@ function getTeacherData(teacher, username) {
         if (!accVotes(acc, parent+list[i])) count++;
     }
 
-    if (!count) return null;
+    if (!count) return [info, null];
 
-    let keys = Object.keys(acc);
+    const keys = Object.keys(acc);
     for (let i = 0, I = keys.length; i < I; i++) acc[keys[i]] /= count;
 
-    return acc;
+    return [info, acc];
 }
 
 function getTeacherVote(teacher, username) {
-    let parent = getVoteFolder(teacher);
+    const parent = getVoteFolder(teacher);
     if (!allowedToSee(parent, username)) return null;
 
     return JSON.parse(fs.readFileSync(parent+username+".txt"));
@@ -90,14 +105,14 @@ function getTeacherVote(teacher, username) {
 function userVote(teacher, username, data) {
     // check if the data format is correct
     let corrected = {};
-    let keys = Object.keys(data);
+    const keys = Object.keys(data);
 
-    const l1 = template.length, l2 = keys.length;
+    const l1 = voteKeys.length, l2 = keys.length;
     if (l1 != l2) return false;
 
     for (let i = 0; i < l1; i++) {
-        if (!template.includes(keys[i])) return false;
-        if (!keys.includes(template[i])) return false;
+        if (!voteKeys.includes(keys[i])) return false;
+        if (!keys.includes(voteKeys[i])) return false;
     }
 
     fs.writeFile(getVoteFolder(teacher)+username+".txt", JSON.stringify(data), () => {});
@@ -135,6 +150,11 @@ io.on("connection", socket => {
             socket.emit("operationFailed");
         }
     });
+});
+
+process.on("uncaughtException", err => {
+    console.error("Prevented server crash:");
+    console.error(err.stack);
 });
 
 server.listen(port, () => console.log("Listening on port "+port));

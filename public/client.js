@@ -8,6 +8,13 @@ let dom = {
     "loginSubmit": null
 };
 
+// main window teacher tile template
+const template = `
+<div class="tile">
+    <img src="/
+</div>
+`;
+
 // make it so that at the start loginState is 0
 let loginState = -1;
 
@@ -25,6 +32,20 @@ function loginToggle() {
 
     emptyCredentials();
 }
+
+socket.on("receiveAll", data => {
+    list.innerHTML = "";
+
+    const teachers = Object.keys(data);
+    teachers.forEach(teacher => {
+        if (teacher == null) return;
+        const [info, votes] = [teacher[0], teacher[1]];
+
+        let html = template;
+
+        list.innerHTML += html;
+    });
+});
 
 socket.on("disconnect", () => console.warn("Disconnected"));
 

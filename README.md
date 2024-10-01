@@ -28,8 +28,8 @@ Qualité de la personne
 
 files/teachers/folder for each teacher
 ./votes folder:
--> one file per account with gradings for this teacher, json format
-./images folder:
+  -> one file per account with gradings for this teacher, json format
+
 -> a pfp and a banner image
 
 files/accounts
