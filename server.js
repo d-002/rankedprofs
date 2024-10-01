@@ -1,5 +1,3 @@
-const file = "data.txt";
-
 console.log("Importing express...");
 const express = require("express");
 console.log("Setting up server...");
@@ -26,51 +24,116 @@ app.get("/", (req, res) => {
 
 app.use(helmet());
 
+// list of correct vote keys
+const template = [
+    "goodTeacher"
+];
+
 const teachers = fs.readdirSync(__dirname+"/files/teachers");
 
-function addVotes(acc, file) {
-    let data = String(fs.readFileSync(file)).split("\n");
+let getVoteFolder = teacher => __dirname+"/files/teachers/"+teacher+"/votes/";
 
-    for (let i = 0, I = data.length; i < I; i++) {
-        let [key, value] = data[i].split(":");
-        key = key.trim();
-        value = Number(value);
+function accVotes(acc, file) {
+    let data;
+    try {
+        data = JSON.parse(fs.readFileSync(file));
+    }
+    catch {
+        return 1;
+    }
+
+    let keys = Object.keys(data);
+    for (let i = 0, I = keys.length; i < I; i++) {
+        const key = keys[i];
+        const value = data[key];
 
         if (acc[key] == null) acc[key] = value;
         else acc[key] += value;
     }
+
+    return 0;
 }
 
-function getTeacherData(teacher) {
+const allowedToSee = (folder, username) => fs.readdirSync(folder).includes(username+".txt");
+
+function getTeacherData(teacher, username) {
     if (!teachers.includes(teacher)) return null;
 
-    let parent = __dirname+"/files/teachers/"+teacher+"/votes/";
+    let parent = getVoteFolder(teacher);
+    if (!allowedToSee(parent, username)) return null;
+
     const list = fs.readdirSync(parent);
-    if (list.length == 0) return null;
+    let I = list.length;
+    if (!I) return null;
 
     let acc = {}; // accumulator, receives votes
-    list.forEach(file => addVotes(acc, parent+file));
+    let count = 0;
+    for (let i = 0; i < I; i++) {
+        if (!accVotes(acc, parent+list[i])) count++;
+    }
+
+    if (!count) return null;
 
     let keys = Object.keys(acc);
-    for (let i = 0, count = keys.length; i < count; i++) acc[keys[i]] /= count;
+    for (let i = 0, I = keys.length; i < I; i++) acc[keys[i]] /= count;
 
     return acc;
 }
 
-function getAll() {
+function getTeacherVote(teacher, username) {
+    let parent = getVoteFolder(teacher);
+    if (!allowedToSee(parent, username)) return null;
+
+    return JSON.parse(fs.readFileSync(parent+username+".txt"));
+}
+
+function userVote(teacher, username, data) {
+    // check if the data format is correct
+    let corrected = {};
+    let keys = Object.keys(data);
+
+    const l1 = template.length, l2 = keys.length;
+    if (l1 != l2) return false;
+
+    for (let i = 0; i < l1; i++) {
+        if (!template.includes(keys[i])) return false;
+        if (!keys.includes(template[i])) return false;
+    }
+
+    fs.writeFile(getVoteFolder(teacher)+username+".txt", JSON.stringify(data), () => {});
+    return true;
+}
+
+function getAll(username) {
     let acc = {};
-    teachers.forEach(teacher => acc[teacher] = getTeacherData(teacher));
+    teachers.forEach(teacher => acc[teacher] = getTeacherData(teacher, username));
 
     return acc;
 }
 
 io.on("connection", socket => {
+    let username = "a";
+    let loggedIn = true;
+
     socket.on("requireAll", () => {
-        socket.emit("receiveAll", getAll());
+        if (!loggedIn) return;
+
+        socket.emit("receiveAll", getAll(username));
     });
 
-    socket.on("requireMyVote", teacher => {
-        socket.emit("receiveMyVote", [teacher, getTeacherData(teacher)]);
+    socket.on("requireTeacher", teacher => {
+        if (!loggedIn) return;
+
+        // send global teacher data and user vote
+        socket.emit("receiveTeacher", [teacher, getTeacherData(teacher, username), getTeacherVote(teacher, username)]);
+    });
+
+    socket.on("sendVote", ([teacher, data]) => {
+        if (!loggedIn) return;
+
+        if (userVote(teacher, username, data)) {
+            socket.emit("operationFailed");
+        }
     });
 });
 
