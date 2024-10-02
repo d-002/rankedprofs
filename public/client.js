@@ -11,27 +11,40 @@ let dom = {
 // main window teacher tile template
 const template = `
 <div class="tileDISABLED">
-    <img src="/images/TEACHER/pfp.png" />
+    <div class="left">
+        <div class="img">
+            <img src="/images/TEACHER/pfp.jpg" alt="" />
+        </div>
+        <div class="rank RANK"></div>
+    </div>
     <div class="right">
         <strong>NAME</strong>
         <div class="stars-list">
             <span style="--percent: PERCENT0%" class="stars">
                 Enseignement
+                <div></div>
             </span>
             <span style="--percent: PERCENT1%" class="stars">
                 Rythme de cours
+                <div></div>
             </span>
             <span style="--percent: PERCENT2%" class="stars">
                 Personne
+                <div></div>
             </span>
         </div>
-        <div class="rank RANK"></div>
+
+        <p class="button" onclick="javascript:voteFor('TEACHER')">BUTTONTEXT</p>
     </div>
 </div>
 `;
 
 // make it so that at the start loginState is 0
 let loginState = -1;
+
+function resized() {
+    document.body.className = window.innerWidth < window.innerHeight ? "mobile" : "";
+}
 
 function emptyCredentials() {
     dom.username.value = "";
@@ -49,31 +62,54 @@ function loginToggle() {
 }
 
 function calculateStats(votes) {
-    if (votes == null) return [[0, 0, 0], "?"];
+    if (votes == null) return [[0, 0, 0], "unranked"];
 
     return [[votes.goodTeacher*100, 100, 100], "s"];
 }
 
-socket.on("receiveAll", data => {
+socket.on("receiveAll", teachers => {
     list.innerHTML = "";
 
-    const teachers = Object.keys(data);
-    teachers.forEach(key => {
-        const teacher = data[key];
+    const keys = Object.keys(teachers);
+    // remove problematic input
+    Array.from(keys).forEach(t => {
+        if (teachers[t] == null) {
+            delete teachers[t];
+            keys.remove(t);
+        }
+    });
 
-        if (teacher == null) return;
+    // put pending votes at the top, then sort by last name
+    // slow but does not need to be fast
+    keys.sort((key1, key2) => {
+        let [name1, vote1] = teachers[key1];
+        let [name2, vote2] = teachers[key2];
+
+        const diff = (vote2 == null ? 1 : 0) - (vote1 == null ? 1 : 0);
+        if (diff) return diff;
+
+        name1 = name1.name || "";
+        name2 = name2.name || "";
+        name1 = name1.substring(name1.indexOf(" ")+1);
+        name2 = name2.substring(name2.indexOf(" ")+1);
+        return name1 < name2 ? -1 : name1 > name2 ? 1 : 0;
+    });
+
+    keys.forEach(key => {
+        const teacher = teachers[key];
         const [info, votes] = [teacher[0], teacher[1]];
 
         const [percents, rank] = calculateStats(votes);
         const nl = votes == null;
 
         let html = template.replace("DISABLED", nl ? " disabled" : "");
-        html = html.replace("TEACHER", key);
+        html = html.replaceAll("TEACHER", key);
         html = html.replace("NAME", info.name);
         for (let i = 0; i < 3; i++) {
             html = html.replace("PERCENT"+i, nl ? 0 : percents[i]);
         }
         html = html.replace("RANK", rank);
+        html = html.replace("BUTTONTEXT", nl ? "Voter et voir les stats" : "Modifier le vote");
 
         list.innerHTML += html;
     });
@@ -81,8 +117,12 @@ socket.on("receiveAll", data => {
 
 socket.on("disconnect", () => console.warn("Disconnected"));
 
+window.addEventListener("resize", resized);
+
 window.onload = () => {
     Object.keys(dom).forEach(key => dom[key] = document.getElementById(key));
+
+    resized();
 
     loginToggle();
     socket.emit("requireAll");

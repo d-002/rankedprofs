@@ -1,0 +1,39 @@
+.rank.unranked {
+    --content: "?";
+    --color: #aaa;
+}
+
+.rank.s {
+    --content: "S";
+    --color: #bd65cb;
+}
+
+.rank.a {
+    --content: "A";
+    --color: #1c916d;
+}
+
+.rank.b {
+    --content: "B";
+    --color: #63b54b;
+}
+
+.rank.c {
+    --content: "C";
+    --color: #c4d548;
+}
+
+.rank.d {
+    --content: "D";
+    --color: #f3d52f;
+}
+
+.rank.e {
+    --content: "E";
+    --color: #f99a1a;
+}
+
+.rank.f {
+    --content: "F";
+    --color: #f91a1a;
+}

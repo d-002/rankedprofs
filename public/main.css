@@ -1,11 +1,196 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,300,400,700);
+
 body, html {
+    width: 100%;
+    min-height: 100%;
+
     margin: 0;
     padding: 0;
 }
 
 body {
+    background-color: #b4dbd0;
+
+    display: flex;
+    justify-content: center;
+
+    font-family: "Open sans";
+}
+
+#list {
+    min-height: 100%;
+
+    background-color: #f7f7f7;
+}
+
+body.mobile>#list {
     width: 100%;
+}
+
+body:not(.mobile)>#list {
+    margin: 100px;
+
+    border-radius: 10px;
+    box-shadow: 0 0 25px #0003;
+}
+
+.tile {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+    margin: 10px;
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background-color: var(--bg-tile);
+    border-radius: 7px;
+}
+
+body:not(.mobile) .tile {
+    width: 700px;
+}
+
+.tile:not(.disabled) {
+    border: 2px solid #c9ebd9;
+    background-color: #fff;
+}
+
+.tile.disabled {
+    background-color: #eee;
+    color: #555;
+}
+
+.tile .img {
+    width: 6rem;
+    height: 6rem;
+
+    border-radius: 15px;
+    box-shadow: 0 0 15px #0005;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-image: url("/no_pfp.png");
+    background-size: contain;
+}
+
+.tile .img img {
+    width: 100%;
+}
+
+.tile.disabled img {
+    filter: grayscale(1);
+}
+
+.tile strong {
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.tile span {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.tile span>div {
+    position: relative;
+
+    width: 100%;
+    height: 8px;
+
+    border-radius: 4px;
+
+    background-color: #ccc;
+}
+
+.tile span>div::after {
+    content: "";
+
+    position: absolute;
+
+    width: var(--percent);
     height: 100%;
+    box-sizing: border-box;
+
+    border: 1px solid #dbbd6c;
+    border-radius: 4px;
+    box-shadow: 0 0 10px #0002;
+
+    background-color: #fdde18;
+}
+
+.tile.disabled span>div::after {
+    content: unset;
+}
+
+.tile .left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.tile .right {
+    width: 100%;
+}
+
+.tile .rank {
+    width: 3.5rem;
+    height: 3.5rem;
+
+    box-shadow: 0 0 10px var(--color);
+    border-radius: 0.5rem;
+    background-color: var(--color);
+
+    color: #fff;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+body:not(.mobile) .tile .rank {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+body.mobile .tile .rank {
+    position: relative;
+}
+
+.rank::after {
+    content: var(--content);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.tile p.button {
+    width: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+
+    border: 2px solid #73bb73;
+    border-radius: 1rem;
+
+    background-color: #fff;
+    color: #165118;
+    font-weight: bold;
+    text-align: center;
+}
+
+.tile p.button:hover {
+    background-color: #dde5e1;
+    cursor: pointer;
 }
 
 #login-popup {

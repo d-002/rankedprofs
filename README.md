@@ -43,6 +43,8 @@ website links in single teacher view
 
 rank
 
+crown for the best teacher
+
 can show teachers pfp in fullscreen of course :)
 
 adjective depending on the results per category

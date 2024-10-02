@@ -33,7 +33,7 @@ app.get("/images*", (req, res) => {
     const teacher = split[split.length-2];
     const image = split[split.length-1];
 
-    res.sendFile(__dirname+"/files/teachers/"+teacher+"/"+image);
+    res.sendFile(getTeacherFolder(teacher)+image);
 });
 
 app.use(helmet());
@@ -44,7 +44,8 @@ const voteKeys = [
 
 const teachers = fs.readdirSync(__dirname+"/files/teachers");
 
-const getVoteFolder = teacher => __dirname+"/files/teachers/"+teacher+"/votes/";
+const getTeacherFolder = teacher => __dirname+"/files/teachers/"+teacher+"/";
+const getVoteFolder = teacher => getTeacherFolder(teacher)+"votes/";
 
 function accVotes(acc, file) {
     let data;
@@ -67,12 +68,31 @@ function accVotes(acc, file) {
     return 0;
 }
 
-const allowedToSee = (folder, username) => fs.readdirSync(folder).includes(username+".txt");
+function allowedToSee(folder, username) {
+    if (!fs.existsSync(folder)) {
+        fs.mkdirSync(folder);
+        console.log("NOTICE: created missing folder "+folder);
+        return false;
+    }
+    return fs.readdirSync(folder).includes(username+".txt");
+}
 
 function getTeacherData(teacher, username) {
     if (!teachers.includes(teacher)) return null;
 
-    const info = JSON.parse(fs.readFileSync(__dirname+"/files/teachers/"+teacher+"/info.txt"));
+    const path = getTeacherFolder(teacher)+"/info.txt";
+    if (!fs.existsSync(path)) {
+        fs.writeFileSync(path, '{"name":"Placeholder name"}');
+        console.log("NOTICE: created dummy missing file "+path);
+    }
+    let info;
+    try {
+        info = JSON.parse(fs.readFileSync(path));
+    }
+    catch {
+        // invalid json
+        return null;
+    }
 
     const parent = getVoteFolder(teacher);
     if (!allowedToSee(parent, username)) return [info, null];
