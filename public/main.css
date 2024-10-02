@@ -12,7 +12,8 @@ body {
     background-color: #b4dbd0;
 
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 
     font-family: "Open sans";
 }
@@ -29,9 +30,25 @@ body.mobile>#list {
 
 body:not(.mobile)>#list {
     margin: 100px;
+    margin-top: 0;
 
     border-radius: 10px;
     box-shadow: 0 0 25px #0003;
+}
+
+h1 {
+    margin: 100px 0 20px 0;
+    font-size: 3rem;
+
+    filter: drop-shadow(0 0 10px #0007);
+
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+}
+
+body.mobile h1 {
+    margin: 20px 0;
 }
 
 .tile {
@@ -50,10 +67,6 @@ body:not(.mobile)>#list {
     border-radius: 7px;
 }
 
-body:not(.mobile) .tile {
-    width: 700px;
-}
-
 .tile:not(.disabled) {
     border: 2px solid #c9ebd9;
     background-color: #fff;
@@ -62,6 +75,10 @@ body:not(.mobile) .tile {
 .tile.disabled {
     background-color: #eee;
     color: #555;
+}
+
+body:not(.mobile) .tile {
+    width: 700px;
 }
 
 .tile .img {
