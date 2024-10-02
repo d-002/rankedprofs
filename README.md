@@ -39,6 +39,8 @@ files/teachers.txt: all the teachers names
 
 ## Features
 
+website links in single teacher view
+
 rank
 
 can show teachers pfp in fullscreen of course :)

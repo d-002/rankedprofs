@@ -10,8 +10,23 @@ let dom = {
 
 // main window teacher tile template
 const template = `
-<div class="tile">
-    <img src="/
+<div class="tileDISABLED">
+    <img src="/images/TEACHER/pfp.png" />
+    <div class="right">
+        <strong>NAME</strong>
+        <div class="stars-list">
+            <span style="--percent: PERCENT0%" class="stars">
+                Enseignement
+            </span>
+            <span style="--percent: PERCENT1%" class="stars">
+                Rythme de cours
+            </span>
+            <span style="--percent: PERCENT2%" class="stars">
+                Personne
+            </span>
+        </div>
+        <div class="rank RANK"></div>
+    </div>
 </div>
 `;
 
@@ -33,15 +48,32 @@ function loginToggle() {
     emptyCredentials();
 }
 
+function calculateStats(votes) {
+    if (votes == null) return [[0, 0, 0], "?"];
+
+    return [[votes.goodTeacher*100, 100, 100], "s"];
+}
+
 socket.on("receiveAll", data => {
     list.innerHTML = "";
 
     const teachers = Object.keys(data);
-    teachers.forEach(teacher => {
+    teachers.forEach(key => {
+        const teacher = data[key];
+
         if (teacher == null) return;
         const [info, votes] = [teacher[0], teacher[1]];
 
-        let html = template;
+        const [percents, rank] = calculateStats(votes);
+        const nl = votes == null;
+
+        let html = template.replace("DISABLED", nl ? " disabled" : "");
+        html = html.replace("TEACHER", key);
+        html = html.replace("NAME", info.name);
+        for (let i = 0; i < 3; i++) {
+            html = html.replace("PERCENT"+i, nl ? 0 : percents[i]);
+        }
+        html = html.replace("RANK", rank);
 
         list.innerHTML += html;
     });
