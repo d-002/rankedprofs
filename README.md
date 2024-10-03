@@ -13,6 +13,7 @@ Qualité de l'enseignement
 Rythme du cours
 - vitesse et rythme d'un cours
 - capable d'avancer dans les TD
+- Organisation
 - connaissance de la matière, des cours
 - qualité et vitesse de parole
 - impression générale
@@ -43,6 +44,8 @@ website links in single teacher view
 
 rank
 
+change buttons styling on click: bg color same as border, box sizing border box
+
 crown for the best teacher
 
 can show teachers pfp in fullscreen of course :)
@@ -51,9 +54,17 @@ adjective depending on the results per category
 
 overview with progression bars
 
+notice to share this quietly
+
+login system with email, email once a month if changes?
+
 not a huge job for the server to parse all the information from the teachers files, and to check whether an user has voted for one, but will still use cache (not stored in a file) for faster access, expires upon teacher info edit
 
 ## TODO
+better feedback on vote fail?
+terms
 implement cache system for getting teachers information
 login system
 noscript
+user suggestions (3 per account?)
+send mail once per month if changes

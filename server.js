@@ -124,6 +124,8 @@ function getTeacherVote(teacher, username) {
 
 function userVote(teacher, username, data) {
     // check if the data format is correct
+    if (!teachers.includes(teacher)) return false;
+
     let corrected = {};
     const keys = Object.keys(data);
 
@@ -167,8 +169,9 @@ io.on("connection", socket => {
         if (!loggedIn) return;
 
         if (userVote(teacher, username, data)) {
-            socket.emit("operationFailed");
+            socket.emit("voteSucceeded");
         }
+        else socket.emit("voteFailed");
     });
 });
 

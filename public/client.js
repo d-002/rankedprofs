@@ -1,6 +1,9 @@
 let socket = io();
 
+let currentTeacher; // if in the teacher view
+
 let dom = {
+    "votePopup": null,
     "username": null,
     "password": null,
     "loginText": null,
@@ -34,7 +37,7 @@ const template = `
             </span>
         </div>
 
-        <p class="button" onclick="javascript:voteFor('TEACHER')">BUTTONTEXT</p>
+        <p class="button" onclick="javascript:openVotePopup('TEACHER')">BUTTONTEXT</p>
     </div>
 </div>
 `;
@@ -65,6 +68,35 @@ function calculateStats(votes) {
     if (votes == null) return [[0, 0, 0], "unranked"];
 
     return [[votes.goodTeacher*100, 100, 100], "s"];
+}
+
+function clickToHide(evt) {
+    if (evt.target == dom.votePopup) closeVotePopup();
+}
+
+function openVotePopup(teacher) {
+    currentTeacher = teacher;
+    dom.votePopup.className = "";
+    dom.votePopup.offsetWidth;
+    dom.votePopup.className = "show";
+    dom.votePopup.addEventListener("click", clickToHide);
+}
+
+function closeVotePopup() {
+    currentTeacher = null;
+    dom.votePopup.className = "";
+    dom.votePopup.offsetWidth;
+    dom.votePopup.className = "hide";
+    dom.votePopup.removeEventListener("click", clickToHide);
+}
+
+function parseVote() {
+    return {};
+}
+
+function vote() {
+    socket.emit("sendVote", [currentTeacher, parseVote()]);
+    closeVotePopup();
 }
 
 socket.on("receiveAll", teachers => {
@@ -113,6 +145,16 @@ socket.on("receiveAll", teachers => {
 
         list.innerHTML += html;
     });
+});
+
+socket.on("voteSucceeded", () => {
+    socket.emit("requireAll");
+    closeVotePopup();
+});
+
+socket.on("voteFailed", () => {
+    console.error("Voting failed");
+    closeVotePopup();
 });
 
 socket.on("disconnect", () => console.warn("Disconnected"));
