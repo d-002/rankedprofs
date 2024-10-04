@@ -1,9 +1,19 @@
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.03);
+    }
+}
+
 .rank.unranked {
     --content: "?";
     --color: #aaa;
 }
 
 .rank.s {
+    animation: pulse 1s infinite alternate;
     --content: "S";
     --color: #bd65cb;
 }

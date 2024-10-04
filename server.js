@@ -1,3 +1,5 @@
+const { voteKeys } = require(__dirname+"/public/voteKeys.js");
+
 console.log("Importing express...");
 const express = require("express");
 console.log("Setting up server...");
@@ -37,10 +39,6 @@ app.get("/images*", (req, res) => {
 });
 
 app.use(helmet());
-
-const voteKeys = [
-    "goodTeacher"
-];
 
 const teachers = fs.readdirSync(__dirname+"/files/teachers");
 
@@ -90,7 +88,7 @@ function getTeacherData(teacher, username) {
         info = JSON.parse(fs.readFileSync(path));
     }
     catch {
-        // invalid json
+        console.warn("WARNING: invalid json found in "+path);
         return null;
     }
 

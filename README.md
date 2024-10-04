@@ -13,16 +13,16 @@ Qualité de l'enseignement
 Rythme du cours
 - vitesse et rythme d'un cours
 - capable d'avancer dans les TD
-- Organisation
+- organisation
 - connaissance de la matière, des cours
 - qualité et vitesse de parole
 - impression générale
 
-Qualité de la personne
+Qualités humaines
 - passion pour son travail
 - qualité de la relation avec la classe
 - à l'écoute en général
-- autorité (ni trop ni pas assez)
+- autorité convenable
 - impression générale
 
 ## Files organization:
@@ -66,5 +66,6 @@ terms
 implement cache system for getting teachers information
 login system
 noscript
+admin page, download data
 user suggestions (3 per account?)
 send mail once per month if changes
