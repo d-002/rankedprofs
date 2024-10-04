@@ -114,6 +114,8 @@ function getTeacherData(teacher, username) {
 }
 
 function getTeacherVote(teacher, username) {
+    if (!teachers.includes(teacher)) return null;
+
     const parent = getVoteFolder(teacher);
     if (!allowedToSee(parent, username)) return null;
 
@@ -135,7 +137,7 @@ function userVote(teacher, username, data) {
         if (!keys.includes(voteKeys[i])) return false;
     }
 
-    fs.writeFile(getVoteFolder(teacher)+username+".txt", JSON.stringify(data), () => {});
+    fs.writeFileSync(getVoteFolder(teacher)+username+".txt", JSON.stringify(data));
     return true;
 }
 
@@ -160,7 +162,7 @@ io.on("connection", socket => {
         if (!loggedIn) return;
 
         // send global teacher data and user vote
-        socket.emit("receiveTeacher", [teacher, getTeacherData(teacher, username), getTeacherVote(teacher, username)]);
+        socket.emit("receiveTeacher", [getTeacherData(teacher, username), getTeacherVote(teacher, username)]);
     });
 
     socket.on("sendVote", ([teacher, data]) => {

@@ -61,6 +61,7 @@ login system with email, email once a month if changes?
 not a huge job for the server to parse all the information from the teachers files, and to check whether an user has voted for one, but will still use cache (not stored in a file) for faster access, expires upon teacher info edit
 
 ## TODO
+property for sliders x, for animation
 better feedback on vote fail?
 terms
 implement cache system for getting teachers information

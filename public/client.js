@@ -11,34 +11,6 @@ let dom = {
     "loginSubmit": null
 };
 
-// category: {id: name}
-// when voting, the subcategories are flattened
-let votingCategories = {
-    "Qualité de l'enseignement": {
-        "answers": "Capable de répondre à une question",
-        "correction": "Qualité des corrections des exos",
-        "readable": "Ecriture lisible",
-        "explanation": "Explication du cours en général",
-        "interest": "Sait intéresser la classe",
-        "overallTeaching": "Impression générale"
-    },
-    "Rythme du cours": {
-        "speed": "Vitesse et rythme d'un cours",
-        "tutorials": "Capable d'avancer dans les TD",
-        "organization": "Organisation",
-        "skill": "Connaissance de la matière, des cours",
-        "speech": "Qualité et vitesse de parole",
-        "overallRythm": "Impression générale",
-    },
-    "Qualités humaines": {
-        "passion": "Passion pour son travail",
-        "class": "Qualité de la relation avec la classe",
-        "open": "A l'écoute en général",
-        "authority": "Autorité convenable",
-        "overallPerson": "Impression générale"
-    }
-};
-
 // main window teacher tile template
 const template = `
 <div class="tileDISABLED">
@@ -95,35 +67,105 @@ function loginToggle() {
 function calculateStats(votes) {
     if (votes == null) return [[0, 0, 0], "unranked"];
 
-    return [[votes.goodTeacher*100, 100, 100], "s"];
+    const list = [];
+    const keys = Object.values(voteCategories);
+    for (let i = 0, I = keys.length; i < I; i++) {
+        list.push(0);
+
+        let count = 0;
+        Object.keys(keys[i]).forEach(key => {
+            list[i] += votes[key] || 0;
+            count++;
+        });
+
+        list[i] *= 100/count;
+    }
+
+    return [list, "s"];
 }
 
 function clickToHide(evt) {
     if (evt.target == dom.votePopup) closeVotePopup();
 }
 
+function mouseMoved(isTouch, evt, elt, id) {
+    // need a click for desktop
+    if (!isTouch && !evt.buttons%2) return;
+
+    let t;
+    if (isTouch) t = (evt.touches[0].clientX-elt.offsetLeft) / elt.offsetWidth;
+    else t = evt.offsetX/elt.offsetWidth;
+
+    // round to only have 20 possible values
+    t = t < 0 ? 0 : t > 1 ? 1 : t;
+    t = Math.round(t*20);
+
+    elt.style = "--percent: "+parseInt(t*5)+"%";
+
+    currentVote[id] = t/20;
+}
+
 function openVotePopup(teacher) {
+    // populate container
+    votesContainer.innerHTML = "";
+
+    Object.keys(voteCategories).forEach(category => {
+        const h3 = document.createElement("h3");
+        h3.innerHTML = category;
+        votesContainer.appendChild(h3);
+
+        const list = voteCategories[category];
+        Object.keys(list).forEach(id => {
+            // comment
+            let elt = document.createElement("span");
+            elt.innerHTML = list[id];
+            votesContainer.appendChild(elt);
+
+            // slider
+            elt = document.createElement("div");
+            elt.className = "slider";
+            elt.style = "--percent: 0";
+
+            votesContainer.appendChild(elt);
+            elt.addEventListener("mousemove", evt => mouseMoved(false, evt, elt, id));
+            elt.addEventListener("touchmove", evt => mouseMoved(true, evt, elt, id));
+        });
+    });
+
     currentTeacher = teacher;
+    currentVote = {};
+    voteKeys.forEach(key => { currentVote[key] = 0; });
+
+    // open popup
     dom.votePopup.className = "";
     dom.votePopup.offsetWidth;
     dom.votePopup.className = "show";
     dom.votePopup.addEventListener("click", clickToHide);
+
+    // reset scroll
+    dom.votePopup.scrollTo(0, 0);
+
+    // get popup stats
+    socket.emit("requireTeacher", teacher);
+}
+
+function fillPopupData(data, myVote) {
+    console.log(data);
+    console.log(myVote);
 }
 
 function closeVotePopup() {
     currentTeacher = null;
+    currentVote = null;
+
     dom.votePopup.className = "";
     dom.votePopup.offsetWidth;
     dom.votePopup.className = "hide";
     dom.votePopup.removeEventListener("click", clickToHide);
 }
 
-function parseVote() {
-    return {};
-}
-
 function vote() {
-    socket.emit("sendVote", [currentTeacher, parseVote()]);
+    socket.emit("sendVote", [currentTeacher, currentVote]);
     closeVotePopup();
 }
 
@@ -169,7 +211,7 @@ socket.on("receiveAll", teachers => {
             html = html.replace("PERCENT"+i, nl ? 0 : percents[i]);
         }
         html = html.replace("RANK", rank);
-        html = html.replace("BUTTONTEXT", nl ? "Voter pour voir les stats" : "Modifier le vote");
+        html = html.replace("BUTTONTEXT", nl ? "Voter pour voir les stats" : "Voir plus");
 
         list.innerHTML += html;
     });
@@ -184,6 +226,8 @@ socket.on("voteFailed", () => {
     console.error("Voting failed");
     closeVotePopup();
 });
+
+socket.on("receiveTeacher", ([data, myVote]) => fillPopupData(data, myVote));
 
 socket.on("disconnect", () => console.warn("Disconnected"));
 
