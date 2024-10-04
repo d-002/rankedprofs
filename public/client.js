@@ -70,8 +70,8 @@ function loginToggle() {
     emptyCredentials();
 }
 
-function calculateStats(votes) {
-    if (votes == null) return [[0, 0, 0], "unranked"];
+function calculateScores(votes) {
+    if (votes == null) return [0, 0, 0];
 
     const list = [];
     const keys = Object.values(voteCategories);
@@ -87,7 +87,21 @@ function calculateStats(votes) {
         list[i] *= 100/count;
     }
 
-    return [list, "s"];
+    return list;
+}
+
+function calculateRank(score, scores) {
+    if (score == null) return "unranked";
+
+    let higher = 0, count = 0;
+    scores.forEach(s => {
+        if (s > score) higher++;
+        count++;
+    });
+
+    let t = higher/(count-1);
+    if (t == 0) return "s";
+    return "abcdef"[parseInt(t*5)];
 }
 
 function clickToHide(evt) {
@@ -208,18 +222,25 @@ socket.on("receiveAll", _teachers => {
         return name1 < name2 ? -1 : name1 > name2 ? 1 : 0;
     });
 
+    let percents = {};
+    keys.forEach(teacher => {
+        percents[teacher] = calculateScores(teachers[teacher][1]);
+    });
+    const percentsValues = Object.values(percents);
+
     keys.forEach(key => {
         const teacher = teachers[key];
-        const [info, votes] = [teacher[0], teacher[1]];
 
-        const [percents, rank] = calculateStats(votes);
-        const nl = votes == null;
+        const info = teacher[0];
+        const percent = percents[key];
+        const nl = teacher[1] == null;
+        const rank = nl ? "unranked" : calculateRank(percent, percentsValues);
 
         let html = template.replace("DISABLED", nl ? " disabled" : "");
         html = html.replaceAll("TEACHER", key);
         html = html.replace("NAME", info.name);
         for (let i = 0; i < 3; i++) {
-            html = html.replace("PERCENT"+i, nl ? 0 : percents[i]);
+            html = html.replace("PERCENT"+i, nl ? 0 : percent[i]);
         }
         html = html.replace("RANK", rank);
         html = html.replace("BUTTONTEXT", nl ? "Voter pour voir les stats" : "Voir plus");

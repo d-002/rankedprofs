@@ -362,7 +362,7 @@ body:not(.mobile) #buttons {
     font-size: 1.5rem;
     font-weight: bold;
     color: #fff;
-    filter: drop-shadow(0 0 5px #0007);
+    filter: drop-shadow(0 0 5px #000);
 }
 
 #voters {
