@@ -100,7 +100,7 @@ function mouseMoved(isTouch, evt, elt, id) {
     t = t < 0 ? 0 : t > 1 ? 1 : t;
     t = Math.round(t*20);
 
-    elt.style = "--percent: "+parseInt(t*5)+"%";
+    elt.style = "--percent: "+parseInt(t*5)+'%; --grade: "'+t+'"';
 
     currentVote[id] = t/20;
 }
@@ -124,7 +124,7 @@ function openVotePopup(teacher) {
             // slider
             elt = document.createElement("div");
             elt.className = "slider";
-            elt.style = "--percent: 0";
+            elt.style = '--percent: 0; --grade: "0"';
 
             votesContainer.appendChild(elt);
             elt.addEventListener("mousemove", evt => mouseMoved(false, evt, elt, id));
@@ -141,9 +141,6 @@ function openVotePopup(teacher) {
     dom.votePopup.offsetWidth;
     dom.votePopup.className = "show";
     dom.votePopup.addEventListener("click", clickToHide);
-
-    // reset scroll
-    dom.votePopup.scrollTo(0, 0);
 
     // get popup stats
     socket.emit("requireTeacher", teacher);

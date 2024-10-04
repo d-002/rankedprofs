@@ -304,7 +304,15 @@ body.mobile #votePopup>div {
 }
 
 body:not(.mobile) #votePopup>div {
+    width: 700px;
+
     border-radius: 10px;
+}
+
+body:not(.mobile) #buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }
 
 #votePopup span {
@@ -313,6 +321,8 @@ body:not(.mobile) #votePopup>div {
 
 .slider {
     position: relative;
+
+    cursor: pointer;
 
     margin: 1.2rem 0 2rem 0;
     width: 100%;
@@ -329,7 +339,11 @@ body:not(.mobile) #votePopup>div {
 }
 
 .slider::after {
-    content: "";
+    content: var(--grade);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     position: absolute;
     left: var(--percent);
@@ -344,6 +358,8 @@ body:not(.mobile) #votePopup>div {
     border-radius: 50%;
     background-color: #ededea;
     border: 2px solid #534f46;
+
+    font-weight: bold;
 }
 
 #login-popup {
