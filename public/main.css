@@ -113,7 +113,7 @@ body:not(.mobile) .tile {
     width: 700px;
 }
 
-.tile .img {
+.tile .img, #pfp {
     width: 6rem;
     height: 6rem;
 
@@ -129,7 +129,12 @@ body:not(.mobile) .tile {
     background-size: contain;
 }
 
-.tile .img img {
+#pfp {
+    max-width: 8rem;
+    max-height: 8rem;
+}
+
+.tile .img img, #pfp img {
     width: 100%;
 }
 
@@ -283,6 +288,8 @@ body:not(.mobile) #votePopup.hide {
 }
 
 #votePopup>div {
+    position: relative;
+
     min-width: 100px;
     height: calc(100% - 100px);
 
@@ -293,10 +300,12 @@ body:not(.mobile) #votePopup.hide {
 
     background-color: #f7f7f7;
     box-shadow: 0 0 20px #0005;
+
+    --bannerH: 400px;
 }
 
-#votePopup h3 {
-    font-size: 1.5rem;
+body.mobile #votePopup>div {
+    --bannerH: 200px;
 }
 
 body.mobile #votePopup>div {
@@ -313,6 +322,60 @@ body:not(.mobile) #buttons {
     display: flex;
     justify-content: center;
     gap: 20px;
+}
+
+#banner {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+
+    width: 100%;
+    height: var(--bannerH);
+}
+
+#banner img {
+    width: 100%;
+}
+
+#name-container {
+    position: absolute;
+    top: var(--bannerH);
+    left: 20px;
+    transform: translateY(-50%);
+
+    display: flex;
+    gap: 20px;
+}
+
+#top-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+}
+
+#name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    filter: drop-shadow(0 0 5px #0007);
+}
+
+#voters {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+#top-spacing {
+    height: calc(var(--bannerH) + 50px);
+}
+
+#votePopup h3 {
+    font-size: 1.5rem;
 }
 
 #votePopup span {

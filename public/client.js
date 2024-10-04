@@ -1,9 +1,15 @@
 let socket = io();
 
+let teachers;
 let currentTeacher; // if in the teacher view
 
 let dom = {
     "votePopup": null,
+    "banner": null,
+    "pfp": null,
+    "name": null,
+    "voters": null,
+
     "username": null,
     "password": null,
     "loginText": null,
@@ -106,6 +112,13 @@ function mouseMoved(isTouch, evt, elt, id) {
 }
 
 function openVotePopup(teacher) {
+    // edit banner
+    dom.banner.children[0].src = "/images/"+teacher+"/banner.jpg";
+    dom.pfp.children[0].src = "/images/"+teacher+"/pfp.jpg";
+    const info = teachers[teacher][0];
+    dom.name.innerHTML = info.name;
+    dom.voters.innerHTML = info.voters + " voter" + (info.voters == 1 ? "" : "s");
+
     // populate container
     votesContainer.innerHTML = "";
 
@@ -166,7 +179,8 @@ function vote() {
     closeVotePopup();
 }
 
-socket.on("receiveAll", teachers => {
+socket.on("receiveAll", _teachers => {
+    teachers = _teachers;
     list.innerHTML = "";
 
     const keys = Object.keys(teachers);

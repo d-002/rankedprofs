@@ -86,6 +86,7 @@ function getTeacherData(teacher, username) {
     let info;
     try {
         info = JSON.parse(fs.readFileSync(path));
+        info.voters = 0;
     }
     catch {
         console.warn("WARNING: invalid json found in "+path);
@@ -106,6 +107,7 @@ function getTeacherData(teacher, username) {
     }
 
     if (!count) return [info, null];
+    info.voters = count;
 
     const keys = Object.keys(acc);
     for (let i = 0, I = keys.length; i < I; i++) acc[keys[i]] /= count;
