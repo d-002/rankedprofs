@@ -1,6 +1,7 @@
 let socket = io();
 
 let teachers;
+let percents;
 let currentTeacher; // if in the teacher view
 
 let dom = {
@@ -9,6 +10,7 @@ let dom = {
     "pfp": null,
     "name": null,
     "voters": null,
+    "rank": null,
 
     "username": null,
     "password": null,
@@ -90,17 +92,25 @@ function calculateScores(votes) {
     return list;
 }
 
-function calculateRank(score, scores) {
-    if (score == null) return "unranked";
+function calculateRank(percent, percents) {
+    if (percent == null) return "unranked";
+
+    const len = percent.length;
+    const sum = l => {
+        let s = 0;
+        for (let i = 0; i < len; i++) s += l[i];
+        return s;
+    };
 
     let higher = 0, count = 0;
-    scores.forEach(s => {
-        if (s > score) higher++;
+    percents.forEach(p => {
+        if (sum(p) > sum(percent)) higher++;
         count++;
     });
 
     let t = higher/(count-1);
-    if (t == 0) return "s";
+    t = (t+1-sum(percent)/len/100) / 2;
+    if (t < 0.02) return "s";
     return "abcdef"[parseInt(t*5)];
 }
 
@@ -132,6 +142,7 @@ function openVotePopup(teacher) {
     const info = teachers[teacher][0];
     dom.name.innerHTML = info.name;
     dom.voters.innerHTML = info.voters + " voter" + (info.voters == 1 ? "" : "s");
+    dom.rank.className = "rank "+calculateRank(percents[teacher], Object.values(percents));
 
     // populate container
     votesContainer.innerHTML = "";
@@ -222,7 +233,7 @@ socket.on("receiveAll", _teachers => {
         return name1 < name2 ? -1 : name1 > name2 ? 1 : 0;
     });
 
-    let percents = {};
+    percents = {};
     keys.forEach(teacher => {
         percents[teacher] = calculateScores(teachers[teacher][1]);
     });

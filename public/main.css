@@ -188,7 +188,7 @@ body:not(.mobile) .tile {
     content: unset;
 }
 
-.tile .left {
+.left {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -200,7 +200,7 @@ body:not(.mobile) .tile {
     width: 100%;
 }
 
-.tile .rank {
+.rank {
     width: 3.5rem;
     height: 3.5rem;
 
@@ -213,13 +213,13 @@ body:not(.mobile) .tile {
     font-weight: bold;
 }
 
-body:not(.mobile) .tile .rank {
+body:not(.mobile) .rank {
     position: absolute;
     top: 20px;
     right: 20px;
 }
 
-body.mobile .tile .rank {
+body.mobile .rank {
     position: relative;
 }
 
@@ -349,6 +349,8 @@ body:not(.mobile) #buttons {
 
     display: flex;
     gap: 20px;
+
+    width: calc(100% - 20px);
 }
 
 #top-details {
