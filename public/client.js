@@ -123,9 +123,18 @@ function clickToHide(evt) {
     if (evt.target == dom.votePopup) closeVotePopup();
 }
 
-function mouseMoved(isTouch, evt, elt, id) {
-    // need a click for desktop
-    if (!isTouch && !evt.buttons%2) return;
+function mouseMoved(state, evt) {
+    const isTouch = state&1;
+
+    // need a left click for desktop
+    if (!state && !evt.buttons&1) return;
+
+    let elt;
+    if (isTouch) elt = evt.touches[0].target;
+    else elt = evt.target;
+    let id = elt.getAttribute("voteId");
+
+    if (id == null) return;
 
     let t;
     if (isTouch) t = (evt.touches[0].clientX-elt.offsetLeft) / elt.offsetWidth;
@@ -149,7 +158,7 @@ function openVotePopup(teacher) {
     const rank = calculateRank(teacher);
 
     dom.name.innerHTML = info.name;
-    dom.voters.innerHTML = info.voters + " voter" + (info.voters == 1 ? "" : "s");
+    dom.voters.innerHTML = info.voters + " vote" + (info.voters == 1 ? "" : "s");
     dom.rank.className = "rank "+rank;
 
     // populate container
@@ -169,12 +178,11 @@ function openVotePopup(teacher) {
 
             // slider
             elt = document.createElement("div");
+            elt.setAttribute("voteId", id);
             elt.className = "slider";
             elt.style = '--percent: 0; --grade: "0"';
 
             dom.votesContainer.appendChild(elt);
-            elt.addEventListener("mousemove", evt => mouseMoved(false, evt, elt, id));
-            elt.addEventListener("touchmove", evt => mouseMoved(true, evt, elt, id));
         });
     });
 
@@ -286,6 +294,10 @@ window.addEventListener("resize", resized);
 
 window.onload = () => {
     Object.keys(dom).forEach(key => dom[key] = document.getElementById(key));
+
+    dom.votesContainer.addEventListener("mousemove", evt => mouseMoved(0, evt));
+    dom.votesContainer.addEventListener("touchmove", evt => mouseMoved(1, evt));
+    dom.votesContainer.addEventListener("click", evt => mouseMoved(2, evt));
 
     resized();
 
