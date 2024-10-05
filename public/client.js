@@ -172,6 +172,17 @@ function openVotePopup(teacher) {
     dom.mainStats.className = nl ? "disabled" : "";
     dom.mainStats.innerHTML = useTemplateStats(nl, percents[teacher]);
 
+    dom.links.innerHTML = "";
+    if (info.links != null) {
+        Object.keys(info.links).forEach(name => {
+            const link = document.createElement("a");
+            link.href = info.links[name];
+            link.innerHTML = name;
+
+            dom.links.appendChild(link);
+        });
+    }
+
     // populate container
     dom.votesContainer.innerHTML = "";
 

@@ -334,6 +334,18 @@ body:not(.mobile) #buttons {
     width: calc(100% - 20px);
 }
 
+#links a {
+    color: #6190cb;
+
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#links a:hover {
+    text-decoration: underline;
+}
+
 #top-details {
     display: flex;
     flex-direction: column;
@@ -354,7 +366,7 @@ body:not(.mobile) #buttons {
 }
 
 #top-spacing {
-    height: calc(var(--bannerH) + 50px);
+    height: calc(var(--bannerH) + 70px);
 }
 
 #votePopup h3 {
