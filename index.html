@@ -16,17 +16,25 @@
 
     <body>
         <h1>Ranked profs</h1>
-        <div id="list">
+
+        <div id="main">
+            <div id="list">
+            </div>
+
+            <p>Partagez ce site le plus possible ! Mais discrètement...</p>
+            <a onclick="disconnect()">Se déconnecter</a>
+            <a onclick="document.location.href=('/terms')">Termes et conditions</a>
+            <a onclick="document.location.href=('https://github.com/d-002/rankedprofs/issues')">Contact</a>
         </div>
 
         <div id="votePopup">
             <div>
                 <div id="banner">
-                    <img />
+                    <img onclick="javascript:openLargeImage(false, null)" />
                 </div>
                 <div id="name-container">
                     <div class="left">
-                        <div id="pfp">
+                        <div id="pfp" onclick="javascript:openLargeImage(true, null)">
                             <div><img alt="" /></div>
                         </div>
                         <div id="rank" class="rank"></div>
@@ -53,6 +61,10 @@
                     <p class="button" onclick="javascript:closeVotePopup()">Annuler</p>
                 </div>
             </div>
+        </div>
+
+        <div id="largeImage" onclick="javascript:closeLargeImage()">
+            <div></div>
         </div>
 
         <div id="login-popup">

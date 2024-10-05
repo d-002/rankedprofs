@@ -40,15 +40,18 @@ files/teachers.txt: all the teachers names
 
 ## Features
 
-can show teachers pfp in fullscreen of course :)
-
 adjective depending on the results per category
-
-notice to share this quietly
 
 login system with email, email once a month if changes?
 
 not a huge job for the server to parse all the information from the teachers files, and to check whether an user has voted for one, but will still use cache (not stored in a file) for faster access, expires upon teacher info edit
+
+briging back users: send an email if changes in the past month (if carry, get the data from the previous month, send an email to all users, then go to the next month)
+email: system to guess what the most important event was among:
+- an update being released (additionally, also select from another category if possible)
+- a teacher being added, removed to the database
+- a teacher going into first or last place, or switching places (middle spots become less interesting): for example "... has been elected as the best teacher? Do you agree? Vote now! Catch up!"
+- always add the total number of votes cast and user changes
 
 ## TODO
 favicon

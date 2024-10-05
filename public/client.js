@@ -19,6 +19,8 @@ let dom = {
     "links": null,
     "mainStats": null,
 
+    "largeImage": null,
+
     "username": null,
     "password": null,
     "loginText": null,
@@ -31,7 +33,7 @@ const template = `
 <div class="tileDISABLED">
     <div class="left">
         <div class="img">
-            <div><img src="/images/TEACHER/pfp.jpg" class="CROWN" alt="" /></div>
+            <div><img src="/images/TEACHER/pfp.jpg" class="CROWN" onclick="javascript:openLargeImage(true, 'TEACHER')" alt="" /></div>
         </div>
         <div class="rank RANK"></div>
     </div>
@@ -243,6 +245,15 @@ function closeVotePopup() {
 function vote() {
     socket.emit("sendVote", [currentTeacher, currentVote]);
     closeVotePopup();
+}
+
+function openLargeImage(isPfp, teacher) {
+    if (teacher == null) teacher = currentTeacher;
+    dom.largeImage.style = 'display: block; --image: url("/images/'+teacher+"/"+(isPfp ? "pfp" : "banner")+'.jpg")';
+}
+
+function closeLargeImage() {
+    dom.largeImage.style = "display: none";
 }
 
 function useTemplateStats(nl, percent) {
