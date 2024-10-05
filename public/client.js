@@ -2,10 +2,14 @@ let socket = io();
 
 let teachers;
 let percents;
+let currentVote;
 let currentTeacher; // if in the teacher view
 
 let dom = {
+    "list": null,
+
     "votePopup": null,
+    "votesContainer": null,
     "banner": null,
     "pfp": null,
     "name": null,
@@ -92,8 +96,9 @@ function calculateScores(votes) {
     return list;
 }
 
-function calculateRank(percent, percents) {
-    if (percent == null) return "unranked";
+function calculateRank(teacher, percents) {
+    const percent = percents[teacher];
+    if (teachers[teacher][1] || percent == null) return "unranked";
 
     const len = percent.length;
     const sum = l => {
@@ -139,32 +144,35 @@ function openVotePopup(teacher) {
     // edit banner
     dom.banner.children[0].src = "/images/"+teacher+"/banner.jpg";
     dom.pfp.children[0].src = "/images/"+teacher+"/pfp.jpg";
+
     const info = teachers[teacher][0];
+    const rank = calculateRank(teacher, Object.values(percents));
+
     dom.name.innerHTML = info.name;
     dom.voters.innerHTML = info.voters + " voter" + (info.voters == 1 ? "" : "s");
-    dom.rank.className = "rank "+calculateRank(percents[teacher], Object.values(percents));
+    dom.rank.className = "rank "+rank;
 
     // populate container
-    votesContainer.innerHTML = "";
+    dom.votesContainer.innerHTML = "";
 
     Object.keys(voteCategories).forEach(category => {
         const h3 = document.createElement("h3");
         h3.innerHTML = category;
-        votesContainer.appendChild(h3);
+        dom.votesContainer.appendChild(h3);
 
         const list = voteCategories[category];
         Object.keys(list).forEach(id => {
             // comment
             let elt = document.createElement("span");
             elt.innerHTML = list[id];
-            votesContainer.appendChild(elt);
+            dom.votesContainer.appendChild(elt);
 
             // slider
             elt = document.createElement("div");
             elt.className = "slider";
             elt.style = '--percent: 0; --grade: "0"';
 
-            votesContainer.appendChild(elt);
+            dom.votesContainer.appendChild(elt);
             elt.addEventListener("mousemove", evt => mouseMoved(false, evt, elt, id));
             elt.addEventListener("touchmove", evt => mouseMoved(true, evt, elt, id));
         });
@@ -206,7 +214,7 @@ function vote() {
 
 socket.on("receiveAll", _teachers => {
     teachers = _teachers;
-    list.innerHTML = "";
+    dom.list.innerHTML = "";
 
     const keys = Object.keys(teachers);
     // remove problematic input
@@ -245,7 +253,7 @@ socket.on("receiveAll", _teachers => {
         const info = teacher[0];
         const percent = percents[key];
         const nl = teacher[1] == null;
-        const rank = nl ? "unranked" : calculateRank(percent, percentsValues);
+        const rank = calculateRank(key, percentsValues);
 
         let html = template.replace("DISABLED", nl ? " disabled" : "");
         html = html.replaceAll("TEACHER", key);
@@ -256,7 +264,7 @@ socket.on("receiveAll", _teachers => {
         html = html.replace("RANK", rank);
         html = html.replace("BUTTONTEXT", nl ? "Voter pour voir les stats" : "Voir plus");
 
-        list.innerHTML += html;
+        dom.list.innerHTML += html;
     });
 });
 
