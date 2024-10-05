@@ -96,9 +96,9 @@ function calculateScores(votes) {
     return list;
 }
 
-function calculateRank(teacher, percents) {
+function calculateRank(teacher) {
     const percent = percents[teacher];
-    if (teachers[teacher][1] || percent == null) return "unranked";
+    if (teachers[teacher][1] == null || percent == null) return "unranked";
 
     const len = percent.length;
     const sum = l => {
@@ -108,7 +108,7 @@ function calculateRank(teacher, percents) {
     };
 
     let higher = 0, count = 0;
-    percents.forEach(p => {
+    Object.values(percents).forEach(p => {
         if (sum(p) > sum(percent)) higher++;
         count++;
     });
@@ -146,7 +146,7 @@ function openVotePopup(teacher) {
     dom.pfp.children[0].src = "/images/"+teacher+"/pfp.jpg";
 
     const info = teachers[teacher][0];
-    const rank = calculateRank(teacher, Object.values(percents));
+    const rank = calculateRank(teacher);
 
     dom.name.innerHTML = info.name;
     dom.voters.innerHTML = info.voters + " voter" + (info.voters == 1 ? "" : "s");
@@ -253,7 +253,7 @@ socket.on("receiveAll", _teachers => {
         const info = teacher[0];
         const percent = percents[key];
         const nl = teacher[1] == null;
-        const rank = calculateRank(key, percentsValues);
+        const rank = calculateRank(key);
 
         let html = template.replace("DISABLED", nl ? " disabled" : "");
         html = html.replaceAll("TEACHER", key);
