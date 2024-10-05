@@ -335,6 +335,8 @@ body:not(.mobile) #buttons {
 }
 
 #links a {
+    display: block;
+
     color: #6190cb;
 
     font-size: 1rem;

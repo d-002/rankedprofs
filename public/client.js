@@ -273,14 +273,15 @@ socket.on("receiveAll", _teachers => {
     teachers = _teachers;
     dom.list.innerHTML = "";
 
-    const keys = Object.keys(teachers);
+    const keys = Array.from(Object.keys(teachers));
     // remove problematic input
-    Array.from(keys).forEach(t => {
-        if (teachers[t] == null) {
-            delete teachers[t];
-            keys.remove(t);
+    for (let i = keys.length-1; i >= 0; i--) {
+        const teacher = keys[i];
+        if (teachers[teacher] == null) {
+            delete teachers[teacher];
+            keys.splice(i, 1);
         }
-    });
+    }
 
     // put pending votes at the top, then sort by last name
     // slow but does not need to be fast
