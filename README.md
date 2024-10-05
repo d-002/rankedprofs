@@ -51,17 +51,13 @@ login system with email, email once a month if changes?
 not a huge job for the server to parse all the information from the teachers files, and to check whether an user has voted for one, but will still use cache (not stored in a file) for faster access, expires upon teacher info edit
 
 ## TODO
-add listener for click
-optimize listeners?
+favicon
 reset vote popup scroll
-not mobile to desktop
-property for sliders x, for animation
 better feedback on vote fail?
-terms
-implement cache system for getting teachers information
+implement cache system for getting teachers information server side (see above)
 login system
 noscript
+terms
 admin page, download data
-user suggestions (3 per account?)
 send mail once per month if changes
-favicon
+comments system

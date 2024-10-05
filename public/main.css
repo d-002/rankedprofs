@@ -444,3 +444,13 @@ body:not(.mobile) #buttons {
 #login-popup {
     display: none;
 }
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #f7f7f7;
+    border: 1px solid #0005;
+    border-radius: 5px;
+}
