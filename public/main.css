@@ -134,13 +134,13 @@ body:not(.mobile) .tile {
     margin-bottom: 1rem;
 }
 
-.tile span {
+.bar {
     font-size: 0.8rem;
     font-weight: bold;
     color: #333;
 }
 
-.tile span>div {
+.bar>div {
     position: relative;
 
     width: 100%;
@@ -151,13 +151,17 @@ body:not(.mobile) .tile {
     background-color: #ccc;
 }
 
-.tile span>div::after {
+.bar>div::after {
     content: "";
 
     position: absolute;
 }
 
-.tile span>div::after, .slider::before {
+.disabled .bar>div::after {
+    content: unset;
+}
+
+.bar>div::after, .slider::before {
     width: var(--percent);
     height: 100%;
 
@@ -168,10 +172,6 @@ body:not(.mobile) .tile {
     box-shadow: 0 0 0.8rem #0002;
 
     background-color: #fdde18;
-}
-
-.tile.disabled span>div::after {
-    content: unset;
 }
 
 .left {
@@ -361,7 +361,7 @@ body:not(.mobile) #buttons {
     font-size: 1.5rem;
 }
 
-#votePopup span {
+#votePopup span:not(.bar) {
     font-size: 1rem;
 }
 

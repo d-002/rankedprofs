@@ -10,11 +10,14 @@ let dom = {
 
     "votePopup": null,
     "votesContainer": null,
+
     "banner": null,
     "pfp": null,
     "name": null,
     "voters": null,
     "rank": null,
+    "links": null,
+    "mainStats": null,
 
     "username": null,
     "password": null,
@@ -34,24 +37,28 @@ const template = `
     </div>
     <div class="right">
         <strong>NAME</strong>
-        <div class="stars-list">
-            <span style="--percent: PERCENT0%" class="stars">
-                Enseignement
-                <div></div>
-            </span>
-            <span style="--percent: PERCENT1%" class="stars">
-                Rythme de cours
-                <div></div>
-            </span>
-            <span style="--percent: PERCENT2%" class="stars">
-                Personne
-                <div></div>
-            </span>
-        </div>
+        TEMPLATESTATS
 
         <p class="button" onclick="javascript:openVotePopup('TEACHER')">BUTTONTEXT</p>
     </div>
 </div>
+`;
+
+const templateBars = `
+        <div class="stars-list">
+            <span style="--percent: PERCENT0%" class="bar">
+                Enseignement
+                <div></div>
+            </span>
+            <span style="--percent: PERCENT1%" class="bar">
+                Rythme de cours
+                <div></div>
+            </span>
+            <span style="--percent: PERCENT2%" class="bar">
+                Personne
+                <div></div>
+            </span>
+        </div>
 `;
 
 // make it so that at the start loginState is 0
@@ -155,11 +162,15 @@ function openVotePopup(teacher) {
     dom.pfp.children[0].src = "/images/"+teacher+"/pfp.jpg";
 
     const info = teachers[teacher][0];
+    const nl = teachers[teacher][1] == null;
     const rank = calculateRank(teacher);
 
     dom.name.innerHTML = info.name;
     dom.voters.innerHTML = info.voters + " vote" + (info.voters == 1 ? "" : "s");
     dom.rank.className = "rank "+rank;
+
+    dom.mainStats.className = nl ? "disabled" : "";
+    dom.mainStats.innerHTML = useTemplateStats(nl, percents[teacher]);
 
     // populate container
     dom.votesContainer.innerHTML = "";
@@ -220,6 +231,33 @@ function vote() {
     closeVotePopup();
 }
 
+function useTemplateStats(nl, percent) {
+    let html = templateBars;
+    for (let i = 0; i < 3; i++) {
+        html = html.replace("PERCENT"+i, nl ? 0 : percent[i]);
+    }
+
+    return html;
+}
+
+function useTemplate(key) {
+    const teacher = teachers[key];
+
+    const info = teacher[0];
+    const percent = percents[key];
+    const nl = teacher[1] == null;
+    const rank = calculateRank(key);
+
+    let html = template.replace("DISABLED", nl ? " disabled" : "");
+    html = html.replaceAll("TEACHER", key);
+    html = html.replace("NAME", info.name);
+    html = html.replace("RANK", rank);
+    html = html.replace("BUTTONTEXT", nl ? "Voter pour voir les stats" : "Voir plus");
+    html = html.replace("TEMPLATESTATS", useTemplateStats(nl, percent));
+
+    return html;
+}
+
 socket.on("receiveAll", _teachers => {
     teachers = _teachers;
     dom.list.innerHTML = "";
@@ -253,27 +291,8 @@ socket.on("receiveAll", _teachers => {
     keys.forEach(teacher => {
         percents[teacher] = calculateScores(teachers[teacher][1]);
     });
-    const percentsValues = Object.values(percents);
 
-    keys.forEach(key => {
-        const teacher = teachers[key];
-
-        const info = teacher[0];
-        const percent = percents[key];
-        const nl = teacher[1] == null;
-        const rank = calculateRank(key);
-
-        let html = template.replace("DISABLED", nl ? " disabled" : "");
-        html = html.replaceAll("TEACHER", key);
-        html = html.replace("NAME", info.name);
-        for (let i = 0; i < 3; i++) {
-            html = html.replace("PERCENT"+i, nl ? 0 : percent[i]);
-        }
-        html = html.replace("RANK", rank);
-        html = html.replace("BUTTONTEXT", nl ? "Voter pour voir les stats" : "Voir plus");
-
-        dom.list.innerHTML += html;
-    });
+    keys.forEach(key => { dom.list.innerHTML += useTemplate(key); });
 });
 
 socket.on("voteSucceeded", () => {

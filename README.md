@@ -74,3 +74,4 @@ noscript
 admin page, download data
 user suggestions (3 per account?)
 send mail once per month if changes
+favicon
