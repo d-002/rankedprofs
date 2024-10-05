@@ -100,24 +100,28 @@ body:not(.mobile) .tile {
 }
 
 .tile .img, #pfp {
-    width: 6rem;
-    height: 6rem;
-
-    border-radius: 15px;
-    box-shadow: 0 0 15px #0005;
-    overflow: hidden;
+    position: relative;
 
     display: flex;
     justify-content: center;
     align-items: center;
-
-    background-image: url("/no_pfp.png");
-    background-size: contain;
 }
 
 #pfp {
     max-width: 8rem;
     max-height: 8rem;
+}
+
+:is(.tile .img, #pfp) div {
+    border-radius: 15px;
+    box-shadow: 0 0 15px #0005;
+    overflow: hidden;
+
+    width: 6rem;
+    height: 6rem;
+
+    background-image: url("/no_pfp.png");
+    background-size: contain;
 }
 
 .tile .img img, #pfp img {
@@ -126,6 +130,20 @@ body:not(.mobile) .tile {
 
 .tile.disabled img {
     filter: grayscale(1);
+}
+
+:is(.tile .img, #pfp):has(.crown)::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+
+    transform: translate(-45%, -70%) rotate(-30deg);
+    width: 3rem;
+    height: 3rem;
+
+    background: url("/crown.png");
+    background-size: contain;
 }
 
 .tile strong {
@@ -336,6 +354,7 @@ body:not(.mobile) #buttons {
 
 #links a {
     display: block;
+    margin-bottom: 0.5rem;
 
     color: #6190cb;
 

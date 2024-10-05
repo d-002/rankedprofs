@@ -31,7 +31,7 @@ const template = `
 <div class="tileDISABLED">
     <div class="left">
         <div class="img">
-            <img src="/images/TEACHER/pfp.jpg" alt="" />
+            <div><img src="/images/TEACHER/pfp.jpg" class="CROWN" alt="" /></div>
         </div>
         <div class="rank RANK"></div>
     </div>
@@ -105,7 +105,7 @@ function calculateScores(votes) {
 
 function calculateRank(teacher) {
     const percent = percents[teacher];
-    if (teachers[teacher][1] == null || percent == null) return "unranked";
+    if (teachers[teacher][1] == null || percent == null) return ["unranked", false];
 
     const len = percent.length;
     const sum = l => {
@@ -122,8 +122,8 @@ function calculateRank(teacher) {
 
     let t = higher/(count-1);
     t = (t+1-sum(percent)/len/100) / 2;
-    if (t < 0.02) return "s";
-    return "abcdef"[parseInt(t*5)];
+    if (t < 0.02) return ["s", higher == 0];
+    return ["abcdef"[parseInt(t*5)], higher == 0];
 }
 
 function clickToHide(evt) {
@@ -159,11 +159,14 @@ function mouseMoved(state, evt) {
 function openVotePopup(teacher) {
     // edit banner
     dom.banner.children[0].src = "/images/"+teacher+"/banner.jpg";
-    dom.pfp.children[0].src = "/images/"+teacher+"/pfp.jpg";
+    const pfp = dom.pfp.children[0].children[0];
+    pfp.src = "/images/"+teacher+"/pfp.jpg";
 
     const info = teachers[teacher][0];
     const nl = teachers[teacher][1] == null;
-    const rank = calculateRank(teacher);
+    const [rank, isFirst] = calculateRank(teacher);
+
+    pfp.className = isFirst ? "crown" : "";
 
     dom.name.innerHTML = info.name;
     dom.voters.innerHTML = info.voters + " vote" + (info.voters == 1 ? "" : "s");
@@ -257,10 +260,11 @@ function useTemplate(key) {
     const info = teacher[0];
     const percent = percents[key];
     const nl = teacher[1] == null;
-    const rank = calculateRank(key);
+    const [rank, isFirst] = calculateRank(key);
 
     let html = template.replace("DISABLED", nl ? " disabled" : "");
     html = html.replaceAll("TEACHER", key);
+    html = html.replace("CROWN", isFirst ? "crown" : "");
     html = html.replace("NAME", info.name);
     html = html.replace("RANK", rank);
     html = html.replace("BUTTONTEXT", nl ? "Voter pour voir les stats" : "Voir plus");

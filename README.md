@@ -40,19 +40,9 @@ files/teachers.txt: all the teachers names
 
 ## Features
 
-website links in single teacher view
-
-rank
-
-change buttons styling on click: bg color same as border, box sizing border box
-
-crown for the best teacher
-
 can show teachers pfp in fullscreen of course :)
 
 adjective depending on the results per category
-
-overview with progression bars
 
 notice to share this quietly
 

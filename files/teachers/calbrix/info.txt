@@ -1,1 +1,11 @@
-{"name":"Hugues Calbrix","links":{"La Huguerie":"https://www.facebook.com/hugues.calbrix/?locale=fr_FR","ITW Light":"https://youtu.be/ViYi6_zGCcA"}}
+{
+    "name": "Hugues Calbrix",
+    "links": {
+        "Chaîne YouTube": "",
+        "Dernières cigarettes de Calbrix": "https://youtu.be/9F8JEkxFeas",
+        "Calbrix au piano (meme discord)": "https://youtu.be/Abt5LYTVonc",
+        "Maison de la poésie d'Avignon": "https://youtu.be/hwfLSLVll2E",
+        "La Huguerie (Facebook)": "https://www.facebook.com/hugues.calbrix/?locale=fr_FR",
+        "ITW Light": "https://youtu.be/ViYi6_zGCcA"
+    }
+}
