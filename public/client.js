@@ -284,6 +284,17 @@ function useTemplate(key) {
     return html;
 }
 
+function onSignIn(response) {
+    socket.emit("googleSignin", response.credential);
+}
+
+function signOut() {
+    const auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(() => {
+        console.log("User signed out");
+    });
+}
+
 socket.on("receiveAll", _teachers => {
     teachers = _teachers;
     dom.list.innerHTML = "";

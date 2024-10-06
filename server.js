@@ -9,6 +9,7 @@ const fs = require("fs");
 const server = http.createServer(app);
 const helmet = require("helmet");
 const bcrypt = require("bcrypt");
+const jose = require("jose");
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -174,6 +175,12 @@ io.on("connection", socket => {
             socket.emit("voteSucceeded");
         }
         else socket.emit("voteFailed");
+    });
+
+    // connections
+    socket.on("googleSignin", token => {
+        const claims = jose.decodeJwt(token);
+        console.log(claims);
     });
 });
 

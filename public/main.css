@@ -263,7 +263,7 @@ p.button:active {
 }
 
 #main>p {
-    margin: 20px 0;
+    margin: 20px;
     font-weight: bold;
 }
 
