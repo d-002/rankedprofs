@@ -33,4 +33,4 @@ Object.values(voteCategories).forEach(category => {
 
 // module is manually set to null on the client
 // so that this file can be imported both by the server and the clients
-if (module != null) module.exports = { voteKeys };
+if (module != null) module.exports = voteKeys;

@@ -1,4 +1,7 @@
-const { voteKeys } = require(__dirname+"/public/voteKeys.js");
+const voteKeys = require(__dirname+"/public/voteKeys.js");
+const { sendEmail, sendVerifEmail } = require(__dirname+"/mailer.js");
+
+sendVerifEmail("rankedprofs@gmail.com", "hahaaa");
 
 console.log("Importing express...");
 const express = require("express");
@@ -181,6 +184,12 @@ io.on("connection", socket => {
     socket.on("googleSignin", token => {
         const claims = jose.decodeJwt(token);
         console.log(claims);
+    });
+
+    socket.on("emailSignup", ([email, password]) => {
+    });
+
+    socket.on("emailSignin", ([email, password]) => {
     });
 });
 
