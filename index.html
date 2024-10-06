@@ -18,11 +18,6 @@
 
     <body>
         <h1>Ranked profs</h1>
-        <div id="g_id_onload"
-             data-client_id="528746548900-5apnda9l45c8ffpadmnuiv16rl6ks7ul.apps.googleusercontent.com"
-             data-callback="onSignIn">
-        </div>
-        <div class="g_id_signin" data-type="standard" data-shape="pill"></div>
 
         <div id="main">
             <div id="list">
@@ -34,7 +29,7 @@
             <a onclick="document.location.href=('https://github.com/d-002/rankedprofs/issues')">Contact</a>
         </div>
 
-        <div id="votePopup">
+        <div id="votePopup" class="popup">
             <div>
                 <div id="banner">
                     <img onclick="javascript:openLargeImage(false, null)" />
@@ -74,19 +69,28 @@
             <div></div>
         </div>
 
-        <div id="login-popup">
-            <h2>Ranked profs</h2>
-            <h3 id="loginText">Chargement...</h3>
-            <form>
-                <label class="small" for="username">Nom d'utilisateur</label>
-                <input type="text" id="username" />
-                <label for="password" class="small">Mot de passe</label>
-                <input type="password" id="password" />
+        <div id="login-popup" class="popup show">
+            <div>
+                <h2>Ranked profs</h2>
+                <h3 id="loginText">Chargement...</h3>
+                <form>
+                    <label class="small" for="username">Nom d'utilisateur</label>
+                    <input type="text" id="username" />
+                    <label for="password" class="small">Mot de passe</label>
+                    <input type="password" id="password" />
 
-                <a id="loginSubmit" onclick="loginSubmit()">Chargement...</a>
+                    <a id="loginSubmit" class="button" onclick="loginSubmit()">Chargement...</a>
 
-                <a id="loginToggle" onclick="loginToggle()">Chargement...</a>
-            </form>
+                    <a id="loginToggle" class="small" onclick="loginToggle()">Chargement...</a>
+                </form>
+
+                <h3>Ou :</h3>
+                <div id="g_id_onload"
+                     data-client_id="528746548900-5apnda9l45c8ffpadmnuiv16rl6ks7ul.apps.googleusercontent.com"
+                     data-callback="onSignIn">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-shape="pill"></div>
+            </div>
         </div>
     </body>
 </html>

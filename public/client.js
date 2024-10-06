@@ -218,9 +218,9 @@ function openVotePopup(teacher) {
     voteKeys.forEach(key => { currentVote[key] = 0; });
 
     // open popup
-    dom.votePopup.className = "";
+    dom.votePopup.className = "popup";
     dom.votePopup.offsetWidth;
-    dom.votePopup.className = "show";
+    dom.votePopup.classList.add("show");
     dom.votePopup.addEventListener("click", clickToHide);
 
     // get popup stats
@@ -236,9 +236,9 @@ function closeVotePopup() {
     currentTeacher = null;
     currentVote = null;
 
-    dom.votePopup.className = "";
+    dom.votePopup.className = "popup";
     dom.votePopup.offsetWidth;
-    dom.votePopup.className = "hide";
+    dom.votePopup.classList.add("hide");
     dom.votePopup.removeEventListener("click", clickToHide);
 }
 
@@ -355,5 +355,4 @@ window.onload = () => {
     resized();
 
     loginToggle();
-    socket.emit("requireAll");
 };
