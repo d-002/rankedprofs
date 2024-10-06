@@ -78,7 +78,7 @@ function allowedToSee(folder, username) {
 function getTeacherData(teacher, username) {
     if (!teachers.includes(teacher)) return null;
 
-    const path = getTeacherFolder(teacher)+"/info.txt";
+    const path = getTeacherFolder(teacher)+"info.txt";
     if (!fs.existsSync(path)) {
         fs.writeFileSync(path, '{"name":"Placeholder name"}');
         console.log("NOTICE: created dummy missing file "+path);
