@@ -1,1 +1,7 @@
-{"name":"Fahd Chehade","links":{"ITW Light":"https://youtu.be/I9Ewik1PHTg"}}
+{
+    "name": "Fahd Chehade",
+    "links":
+    {
+        "ITW Light": "https://youtu.be/I9Ewik1PHTg"
+    }
+}

@@ -21,8 +21,9 @@ let dom = {
 
     "largeImage": null,
 
-    "username": null,
+    "email": null,
     "password": null,
+    "loginError": null,
     "loginText": null,
     "loginToggle": null,
     "loginSubmit": null
@@ -71,8 +72,12 @@ function resized() {
 }
 
 function emptyCredentials() {
-    dom.username.value = "";
+    dom.email.value = "";
     dom.password.value = "";
+}
+
+function loginSubmit() {
+    dom.loginError.innerHTML = "Invalid credentials";
 }
 
 function loginToggle() {
@@ -218,6 +223,7 @@ function openVotePopup(teacher) {
     voteKeys.forEach(key => { currentVote[key] = 0; });
 
     // open popup
+    dom.votePopup.style = ""; // set to display: none at the start
     dom.votePopup.className = "popup";
     dom.votePopup.offsetWidth;
     dom.votePopup.classList.add("show");

@@ -301,10 +301,6 @@ body:has(.popup.show) {
     animation: slide 0.4s reverse forwards;
 }
 
-#votePopup {
-    display: none;
-}
-
 .popup>div {
     position: relative;
 
@@ -523,6 +519,15 @@ h2 {
     border-radius: 10px;
     font-family: "Open sans", calibri, sans-serif;
     font-size: 0.8rem;
+}
+
+#login-popup label {
+    margin-top: 5px;
+}
+
+#login-popup .error {
+    text-align: center;
+    color: #c34545;
 }
 
 #login-popup a {

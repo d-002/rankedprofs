@@ -29,7 +29,7 @@
             <a onclick="document.location.href=('https://github.com/d-002/rankedprofs/issues')">Contact</a>
         </div>
 
-        <div id="votePopup" class="popup">
+        <div id="votePopup" class="popup" style="display: none">
             <div>
                 <div id="banner">
                     <img onclick="javascript:openLargeImage(false, null)" />
@@ -74,10 +74,11 @@
                 <h2>Ranked profs</h2>
                 <h3 id="loginText">Chargement...</h3>
                 <form>
-                    <label class="small" for="username">Nom d'utilisateur</label>
-                    <input type="text" id="username" />
+                    <label class="small" for="email">Adresse email</label>
+                    <input type="text" id="email" />
                     <label for="password" class="small">Mot de passe</label>
                     <input type="password" id="password" />
+                    <label id="loginError" class="error"></label>
 
                     <a id="loginSubmit" class="button" onclick="loginSubmit()">Chargement...</a>
 

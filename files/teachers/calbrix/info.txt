@@ -1,6 +1,7 @@
 {
     "name": "Hugues Calbrix",
-    "links": {
+    "links":
+    {
         "Chaîne YouTube": "",
         "Dernières cigarettes de Calbrix": "https://youtu.be/9F8JEkxFeas",
         "Calbrix au piano (meme discord)": "https://youtu.be/Abt5LYTVonc",

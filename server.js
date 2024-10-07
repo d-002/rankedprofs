@@ -1,7 +1,7 @@
 const voteKeys = require(__dirname+"/public/voteKeys.js");
 const { sendEmail, sendVerifEmail } = require(__dirname+"/mailer.js");
 
-sendVerifEmail("rankedprofs@gmail.com", "hahaaa");
+//sendVerifEmail("rankedprofs@gmail.com", "hahaaa");
 
 console.log("Importing express...");
 const express = require("express");
