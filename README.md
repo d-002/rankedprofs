@@ -15,6 +15,10 @@ email: system to guess what the most important event was among:
 - a teacher going into first or last place, or switching places (middle spots become less interesting): for example "... has been elected as the best teacher? Do you agree? Vote now! Catch up!"
 - always add the total number of votes cast and user changes
 
+Add quotes
+
+Add more images (folder, portfolio design)
+
 ## Signin process
 Two ways to connect: email and google
 
@@ -27,10 +31,12 @@ client-side variable for signin strategy ("email" or "google")
 once the user is successfully logged in, hide the login popup and require all teachers data
 
 ### Email
+first check: if the file has email strategy, is not verified and the creation date is more than a day away, delete the file
+
 **Signup**
 check if new user
 create account file, contents:
-{"verified":0,"pwdHash":[hashed password]}
+{"verified":0,"pwdHash":[hashed password],"creationDate":[timestamp]}
 send verification email
 email contains a link to /email?code=[temp code]
 create a socket and send the code. compare, send feedback, disconnect socket
@@ -47,6 +53,7 @@ just reload the page
 
 ### Google
 send hashed data to the server, decode email
+signup / signin: check if the file exists, also delete it if waiting for email verification and created more than a day before
 
 ## TODO
 favicon
